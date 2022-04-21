@@ -33,8 +33,10 @@ public class Main {
             printReaders(readers);
             printBooks(books);
 
+
             reader.takeBook(5);
             reader2.takeBook("алфавит","кирилл и мефодий");
+            reader1.takeBook("библия","иисус");
             reader3.takeBook(book,book1,book2);
 
             reader.returnBook(1);
