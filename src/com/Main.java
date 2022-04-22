@@ -1,78 +1,84 @@
 package com;
 
-import com.abstract1.Animal;
-import com.abstract1.Cat;
-import com.abstract1.Dog;
-import com.interface1.*;
-
-import java.util.ArrayList;
+import java.io.*;
+import java.rmi.RemoteException;
 
 public class Main {
     public static void main(String[] args) {
-            Reader reader = new Reader("Петров",1,"ИФ",
-                    "21.10.1994","+79001234567");
-            Reader reader1 = new Reader("Иванов",1,"ИБ",
-                    "21.10.1956","+79001234567");
-            Reader reader2 = new Reader("Сидоров",1,"ТБ",
-                    "21.10.1562","+79001234567");
-            Reader reader3 = new Reader("Ромашкин",1,"ЛОГ",
-                    "21.10.1102","+79001234567");
+        //checked  exception
+//        File f = new File("C://note.txt");
+//        FileReader fr = new FileReader(f);
 
+        //unchecked
+//        int []array = {2,3,4};
+//        System.out.println(array[4]);
 
+        //обработка исключений
+        try {
+            //потенциально взрывооопасный код
+            int [] array = new int[2];
+            System.out.println("Доступ к третьему элементу " + array[3]);
+        }catch (ArrayIndexOutOfBoundsException e){
+            //выброс ошибки
+            e.printStackTrace();
+        }finally {
+            //данный блок выполняется ВСЕГДА!!!!!
+            System.out.println("этот блок выполнится в любом случае");
+        }
+        System.out.println("Вне блока");
 
-            Reader[] readers = {reader,reader1,reader2,reader3};
-
-            Book book = new Book("Пикник на обочине","Стругацкие");
-            Book book1 = new Book("Война и мир","Толстой");
-            Book book2 = new Book("История государства Российского"
-                    ,"Карамзин");
-            Book book3 = new Book("Идиот","Достоевский");
-
-            Book[] books = {book,book1,book2,book3};
-
-            printReaders(readers);
-            printBooks(books);
-
-            reader.takeBook(5);
-            reader2.takeBook("алфавит","кирилл и мефодий");
-            reader3.takeBook(book,book1,book2);
-
-            reader.returnBook(1);
-            reader2.returnBook("java","шилдт");
-            reader3.returnBook(book3);
-
-
-
-
-//        Printable printable = new Book("Java ","Shildt");
-//       printable.print();
-//       printable = new Journal("Журнал Караван историй");
-//       printable.print();
-
-//        ArrayList<Animal> house = new ArrayList<>();
-//        house.add(new Cat());
-//        house.add(new Dog());
-//        house.add(new Dog());
-//        for (Animal animal : house) {
-//            animal.voice();
+        //запись
+//        String text = "Hello world";
+//        try(FileOutputStream fos = new FileOutputStream("D://notes.txt")){
+//            byte [] buffer = text.getBytes();
+//            fos.write(buffer,0,buffer.length);
+//            System.out.println("The file has been written");
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
 //        }
 
+        //читаем
+//        try(FileInputStream fis = new FileInputStream("D://notes.txt")){
+//            System.out.println(fis.available());
+//            int i = fis.read();
+//            while (i != -1) {
+//                System.out.print((char)i);
+//                i = fis.read();
+//            }
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
 
-    }
-
-    private static void printBooks(Book[] books) {
-        System.out.println("Список книг");
-        for (Book book:books) {
-            System.out.println(book.getInfo());
-        }
-        System.out.println();
-    }
-
-    private static void printReaders(Reader[] readers) {
-        System.out.println("Список читателей");
-        for (Reader reader:readers) {
-            System.out.println(reader.getInfo());
-        }
-        System.out.println();
+//        try(FileWriter writer = new FileWriter("D://notes.txt",false))
+//                {
+//          String str = "Here you can find activities to practise your reading skills." +
+//                  "Reading will help you to improve your understanding of the";
+//          writer.write(str);
+//          writer.append('\n');
+//          writer.flush();
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        try(FileReader reader = new FileReader("D://notes.txt"))
+//        {
+//            int c;
+//            while ((c=reader.read())!=-1){
+//                System.out.print((char)c);
+//            }
+//
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        File dir = new File("D:/SDK");
+//        if (dir.isDirectory()) {
+//            for (File item: dir.listFiles()) {
+//                if (item.isDirectory()) {
+//                    System.out.println(item.getName() + "\t folder");
+//                }else{
+//                    System.out.println(item.getName() + "\t file");
+//                }
+//            }
+//        }
     }
 }
