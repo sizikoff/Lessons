@@ -49,7 +49,7 @@ public class Main {
             Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress(ip,port));
             try {
                 //адрес куда будем стучаться
-                URL url = new URL("https://www.google.ru");
+                URL url = new URL("https://vozhzhaev.ru/test.php");
                 // тук-тук
                 URLConnection urlConnection = url.openConnection(proxy);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -57,13 +57,12 @@ public class Main {
                 String inputLine;
                 while ((inputLine = in.readLine())!= null)
                     System.out.println(inputLine + "- работает");
-                FileOutputStream fos = new FileOutputStream("D:/good_ip.txt");
+                FileOutputStream fos = new FileOutputStream("D:/good_ip.txt",true);
                 byte[] buffer = (ip+ ":"+ port+"\n").getBytes();
                 fos.write(buffer);
                 fos.flush();
                 fos.close();
-            } catch (Exception e) {
-                System.out.println(ip+" не работает");
+            } catch (IOException e) {
             }
         }
     }
