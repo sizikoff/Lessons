@@ -1,84 +1,92 @@
 package com;
 
 import java.io.*;
-import java.rmi.RemoteException;
+import java.net.*;
 
 public class Main {
     public static void main(String[] args) {
-        //checked  exception
-//        File f = new File("C://note.txt");
-//        FileReader fr = new FileReader(f);
-
-        //unchecked
-//        int []array = {2,3,4};
-//        System.out.println(array[4]);
-
-        //обработка исключений
+        //определяем путь для считывания файла
         try {
-            //потенциально взрывооопасный код
-            int [] array = new int[2];
-            System.out.println("Доступ к третьему элементу " + array[3]);
-        }catch (ArrayIndexOutOfBoundsException e){
-            //выброс ошибки
+            FileInputStream fis = new FileInputStream("D:/ip.txt");
+            int i ;
+            String result = "";
+            //считываем данные из файла FileInputStream
+            while ((i=fis.read())!= -1) {
+                //Пропускаем код 13(перенос каретки)
+                if (i==13)continue;
+                else if(i==10){
+                    //["202.152.51.44","8080"]
+                    String[] ipAndPort = result.split(":");
+                    result = "";
+                    String ip = ipAndPort[0];
+                    int port = Integer.parseInt(ipAndPort[1]);
+                    CheckProxyThread thread = new CheckProxyThread(ip,port);
+                    thread.start();
+                } else if (i==9) {
+                    result += ":";
+                }else{
+                    result+=(char)i;
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            //данный блок выполняется ВСЕГДА!!!!!
-            System.out.println("этот блок выполнится в любом случае");
         }
-        System.out.println("Вне блока");
+    }
 
-        //запись
-//        String text = "Hello world";
-//        try(FileOutputStream fos = new FileOutputStream("D://notes.txt")){
-//            byte [] buffer = text.getBytes();
-//            fos.write(buffer,0,buffer.length);
-//            System.out.println("The file has been written");
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
+    static class CheckProxyThread extends Thread {
 
-        //читаем
-//        try(FileInputStream fis = new FileInputStream("D://notes.txt")){
-//            System.out.println(fis.available());
-//            int i = fis.read();
-//            while (i != -1) {
-//                System.out.print((char)i);
-//                i = fis.read();
-//            }
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
+        String ip;
+        int port;
 
-//        try(FileWriter writer = new FileWriter("D://notes.txt",false))
-//                {
-//          String str = "Here you can find activities to practise your reading skills." +
-//                  "Reading will help you to improve your understanding of the";
-//          writer.write(str);
-//          writer.append('\n');
-//          writer.flush();
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        try(FileReader reader = new FileReader("D://notes.txt"))
-//        {
-//            int c;
-//            while ((c=reader.read())!=-1){
-//                System.out.print((char)c);
-//            }
-//
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        File dir = new File("D:/SDK");
-//        if (dir.isDirectory()) {
-//            for (File item: dir.listFiles()) {
-//                if (item.isDirectory()) {
-//                    System.out.println(item.getName() + "\t folder");
-//                }else{
-//                    System.out.println(item.getName() + "\t file");
-//                }
-//            }
-//        }
+        public CheckProxyThread(String ip,int port){
+            this.port = port;
+            this.ip = ip;
+        }
+
+        @Override
+        public void run() {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress(ip,port));
+            try {
+                URL url = new URL("https://vozhzhaev.ru/test.php");
+                //подключение к web серверу
+                URLConnection urlConnection = url.openConnection(proxy);
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        urlConnection.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine())!= null)
+                    System.out.println(inputLine + "- работает");
+                FileOutputStream fos = new FileOutputStream("D:/good_ip.txt");
+                byte[] buffer = (ip+ ":"+ port+"\n").getBytes();
+                fos.write(buffer);
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                System.out.println(ip+" не работает");
+            }
+        }
     }
 }
+
+//        System.out.println("Главный поток стартовал");
+//        JThread jThread = new JThread();
+//        new Thread(jThread,"Поток ").start();
+//        try {
+//            Thread.sleep(2000);
+//            jThread.disable();
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.out.println("Главный поток финиш");
+
+//        System.out.println("Main thread started...");
+//        JThread jThread = new JThread("Поток");
+//        jThread.start();
+//        try {
+//            jThread.join();
+//        } catch (InterruptedException e) {
+//            System.out.println(jThread.getName() +
+//                    "has been interrupted");
+//        }
+//        System.out.println("Main thread finished");
+//    }

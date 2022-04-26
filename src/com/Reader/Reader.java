@@ -1,4 +1,4 @@
-package com;
+package com.Reader;
 
 public class Reader {
     private String fio;

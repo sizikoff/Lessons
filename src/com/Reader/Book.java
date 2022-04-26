@@ -1,4 +1,4 @@
-package com;
+package com.Reader;
 
 public class Book {
     private String name;
