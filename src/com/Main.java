@@ -45,10 +45,12 @@ public class Main {
 
         @Override
         public void run() {
+            //формируем порт и айпи для постучаться
             Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress(ip,port));
             try {
-                URL url = new URL("https://vozhzhaev.ru/test.php");
-                //подключение к web серверу
+                //адрес куда будем стучаться
+                URL url = new URL("https://www.google.ru");
+                // тук-тук
                 URLConnection urlConnection = url.openConnection(proxy);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                         urlConnection.getInputStream()));
